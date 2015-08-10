@@ -1,7 +1,16 @@
 from rest_framework import serializers
+import models
 
-from django.conf import settings
 
-from web.models import UserProfile
+class RecipientSerializer(serializers.Serializer):
+    id = serializers.EmailField()
+    email = serializers.CharField(max_length=100)
+    phone = serializers.CharField(max_length=12)
 
-User = settings.AUTH_USER_MODEL
+
+class SecretSerializer(serializers.Serializer):
+    recipient = RecipientSerializer()
+    content_delivery_channel = serializers.ChoiceField(choices=models.CHANNEL_TYPES)
+    key_delivery_channel = serializers.ChoiceField(choices=models.CHANNEL_TYPES)
+    sender_id = models.CharField(max_length=models.DEFAULT_MAX_LENGTH)
+    sender_reply_address = models.CharField(max_length=models.DEFAULT_MAX_LENGTH)
