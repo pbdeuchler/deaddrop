@@ -24,4 +24,4 @@ class Secret(models.Model):
     content = models.TextField()
     expiry_type = models.ChoiceField(choices=EXPIRY_TYPES, max_length=1)
     expiry_timestamp = models.DateTimeField()
-    management_key = models.CharField(max_length=512)
+    key = models.CharField(max_length=32)
