@@ -16,5 +16,8 @@ django-bootstrap3
 djangorestframework
 gunicorn
 pycparser
+pycrypto
 requests
 static3
+sendgrid
+twilio

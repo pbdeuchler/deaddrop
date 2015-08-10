@@ -1,26 +1,29 @@
 from rest_framework import serializers
-import models
+
+from .models import Secret, CHANNEL_TYPES, DEFAULT_MAX_LENGTH
 
 
 class SecretSerializer(serializers.ModelSerializer):
+    expiry_timestamp = serializers.DateTimeField(required=False)
+
     class Meta:
-        model = models.Secret
-        exclude = ('uid', )
+        model = Secret
+        exclude = ('uid', 'management_key')
 
 
 class RecipientSerializer(serializers.Serializer):
-    id = serializers.EmailField(required=False)
-    email = serializers.CharField(max_length=100)
+    id = serializers.CharField(required=False)
+    email = serializers.EmailField()
     phone = serializers.CharField(max_length=12)
 
 
 class CreateRequestSerializer(serializers.Serializer):
     recipient = RecipientSerializer()
     secret = SecretSerializer()
-    content_delivery_channel = serializers.ChoiceField(choices=models.CHANNEL_TYPES)
-    key_delivery_channel = serializers.ChoiceField(choices=models.CHANNEL_TYPES)
-    sender_id = models.CharField(max_length=models.DEFAULT_MAX_LENGTH)
-    sender_reply_address = models.CharField(max_length=models.DEFAULT_MAX_LENGTH)
+    content_delivery_channel = serializers.ChoiceField(choices=CHANNEL_TYPES)
+    key_delivery_channel = serializers.ChoiceField(choices=CHANNEL_TYPES)
+    sender_id = serializers.CharField(max_length=DEFAULT_MAX_LENGTH, required=False)
+    sender_reply_address = serializers.EmailField(required=False)
 
 
 class DecryptRequestSerializer(serializers.Serializer):
