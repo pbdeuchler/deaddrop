@@ -1,0 +1,20 @@
+# Versions are left out on purpose in order for you to use the latest ones.
+# After the first "pip install -r", just run "pip freeze" and add the version
+# to each package in each requirements/*.txt.
+
+django
+django-model-utils
+django-rest-swagger
+djoser
+psycopg2
+bcrypt
+cffi
+dj-database-url
+dj-static
+django-authtools
+django-bootstrap3
+djangorestframework
+gunicorn
+pycparser
+requests
+static3
