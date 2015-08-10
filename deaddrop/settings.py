@@ -10,6 +10,10 @@ root = lambda *x: os.path.join(os.path.abspath(PROJECT_ROOT), *x)
 
 sys.path.insert(0, root('apps'))
 
+SENDGRID_API_KEY= os.environ["SENDGRID_API_KEY"]
+TWILIO_ACCOUNT_SID = os.environ["TWILIO_ACCOUNT_SID"]
+TWILIO_AUTH_TOKEN = os.environ["TWILIO_AUTH_TOKEN"]
+TWILIO_FROM_NUMBER = os.environ["TWILIO_FROM_NUMBER"]
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ["SECRET_KEY"]
