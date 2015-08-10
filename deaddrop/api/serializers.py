@@ -5,11 +5,11 @@ import models
 class SecretSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Secret
-        exclude = ('uid', 'key')
+        exclude = ('uid', )
 
 
 class RecipientSerializer(serializers.Serializer):
-    id = serializers.EmailField()
+    id = serializers.EmailField(required=False)
     email = serializers.CharField(max_length=100)
     phone = serializers.CharField(max_length=12)
 
