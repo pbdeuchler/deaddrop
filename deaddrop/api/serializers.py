@@ -2,13 +2,19 @@ from rest_framework import serializers
 import models
 
 
+class SecretSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Secret
+        exclude = ('uid', 'management_key')
+
+
 class RecipientSerializer(serializers.Serializer):
     id = serializers.EmailField()
     email = serializers.CharField(max_length=100)
     phone = serializers.CharField(max_length=12)
 
 
-class SecretSerializer(serializers.Serializer):
+class RequestSerializer(serializers.Serializer):
     recipient = RecipientSerializer()
     content_delivery_channel = serializers.ChoiceField(choices=models.CHANNEL_TYPES)
     key_delivery_channel = serializers.ChoiceField(choices=models.CHANNEL_TYPES)
