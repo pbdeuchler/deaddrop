@@ -3,12 +3,14 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.http import Http404
 
-import models
-import serializers
+import deaddrop.api.models as models
+import deaddrop.api.serializers as serializers
 from deaddrop.senders import SendgridSender, TwilioSender
 from deaddrop.encryption import encryptor
 
 import datetime, uuid
+
+generage_uid = lambda: str(uuid.uuid1()).replace("-", "")
 
 
 class SecretCreate(APIView):
@@ -16,12 +18,16 @@ class SecretCreate(APIView):
     def post(self, request, format=None):
         serializer = serializers.CreateRequestSerializer(data=request.data)
         if serializer.is_valid():
+            print(serializer.data)
             e = encryptor.AESEncryptor()
-            encryped_content, key = e.encrypt_secret(serializer.data['content'])
+            encryped_content, key = e.encrypt_secret(serializer.data['secret']['content'])
+            if (serializer.data['secret']['expiry_type'] == models.TIME_EXPIRY) and serializer.data.get('expiry_timestamp', None) is None:
+                return Response("An expiry time must be provided", status=status.HTTP_400_BAD_REQUEST)
             secret = models.Secret(content=encryped_content,
-                                    uid=str(uuid.uuid1()),
-                                    expiry_type=serializer.data['expiry_type'],
-                                    expiry_timestamp=serializer.data['expiry_timestamp'])
+                                    uid=generage_uid(),
+                                    expiry_type=serializer.data['secret']['expiry_type'],
+                                    expiry_timestamp=serializer.data['secret'].get('expiry_timestamp', None),
+                                    management_key=generage_uid())
             secret.save()
 
             # content send logic
@@ -59,7 +65,8 @@ class SecretCreate(APIView):
                             key)
                 except:
                     return Response(None, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-            return Response({"result": "success"}, status=status.HTTP_200_OK)
+            return Response({"uid": secret.uid, "management_key": secret.management_key},
+                            status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

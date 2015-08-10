@@ -10,7 +10,7 @@ root = lambda *x: os.path.join(os.path.abspath(PROJECT_ROOT), *x)
 
 sys.path.insert(0, root('apps'))
 
-SENDGRID_API_KEY= os.environ["SENDGRID_API_KEY"]
+SENDGRID_API_KEY = os.environ["SENDGRID_API_KEY"]
 TWILIO_ACCOUNT_SID = os.environ["TWILIO_ACCOUNT_SID"]
 TWILIO_AUTH_TOKEN = os.environ["TWILIO_AUTH_TOKEN"]
 TWILIO_FROM_NUMBER = os.environ["TWILIO_FROM_NUMBER"]
@@ -79,8 +79,8 @@ MIDDLEWARE_CLASSES = (
 
 if os.getenv("ENVIRONMENT", "") == "dev":
     MIDDLEWARE_CLASSES += (
-        'deaddrop.web.middleware.LogRequests',
-        'deaddrop.web.middleware.ReadOnly'
+        # 'deaddrop.web.middleware.LogRequests',
+        # 'deaddrop.web.middleware.ReadOnly'
     )
 
 ROOT_URLCONF = 'deaddrop.urls'
@@ -91,8 +91,7 @@ WSGI_APPLICATION = 'deaddrop.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
 
-DATABASES = {}
-DATABASES['default'] = dj_database_url.config()
+DATABASES = {'default': dj_database_url.config()}
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/

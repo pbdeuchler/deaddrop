@@ -1,4 +1,11 @@
-from Crypto.Cipher import AES
+try:
+    from Crypto.Cipher import AES
+except:
+    import crypto
+    import sys
+    sys.modules['Crypto'] = crypto
+    from Crypto.Cipher import AES
+
 import base64
 import os
 
