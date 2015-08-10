@@ -69,3 +69,5 @@ node_modules/
 # bower packages
 growloop/assets-src/vendor/
 .sass-cache/
+
+dev.env
