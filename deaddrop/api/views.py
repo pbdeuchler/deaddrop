@@ -8,7 +8,8 @@ import deaddrop.api.serializers as serializers
 from deaddrop.senders import SendgridSender, TwilioSender
 from deaddrop.encryption import aesencryptor as encryptor
 
-import datetime, uuid, base64
+import uuid
+from datetime import datetime, timezone
 
 generage_uid = lambda: str(uuid.uuid1()).replace("-", "")
 
@@ -102,7 +103,7 @@ class SecretDecrypt(APIView):
     def post(self, request, uid=None, format=None):
         requested_secret = self.get_object(uid)
         if requested_secret.expiry_type == models.TIME_EXPIRY:
-            if (requested_secret.expiry_timestamp - datetime.datetime.now()).days <= 0:
+            if (requested_secret.expiry_timestamp - datetime.now(timezone.utc)).days <= 0:
                 requested_secret.delete()
                 raise Http404
         serializer = serializers.DecryptRequestSerializer(data=request.data)
@@ -119,7 +120,7 @@ class SecretDecrypt(APIView):
 
             if int(requested_secret.expiry_type) == models.READ_EXPIRY:
                 requested_secret.delete()
-            elif (requested_secret.expiry_timestamp - datetime.datetime.now()).days <= 0:
+            elif (requested_secret.expiry_timestamp - datetime.now(timezone.utc)).days <= 0:
                 requested_secret.delete()
             return Response(result, status=status.HTTP_200_OK)
         else:
