@@ -18,8 +18,8 @@ class SecretCreate(APIView):
     def post(self, request, format=None):
         serializer = serializers.CreateRequestSerializer(data=request.data)
         if serializer.is_valid():
-            e = encryptor.AESEncryptor()
-            encryped_content, key = e.encrypt_secret(serializer.data['secret']['content'])
+            encryped_content, key = encryptor.encrypt_secret(serializer.data['secret']['content'])
+            key = str(base64.b64encode(key), "utf-8")
             if (serializer.data['secret']['expiry_type'] == models.TIME_EXPIRY) and serializer.data.get('expiry_timestamp', None) is None:
                 return Response("An expiry time must be provided", status=status.HTTP_400_BAD_REQUEST)
             secret = models.Secret(content=encryped_content,
@@ -33,17 +33,15 @@ class SecretCreate(APIView):
             # secret.save()
             # content send logic
             if serializer.data['content_delivery_channel'] == models.EMAIL_CHANNEL:  # sendgrid
-                ss = SendgridSender.SendgridSender()
                 try:
-                    ss.send(serializer.data['sender_reply_address'],
+                    SendgridSender.send(serializer.data['sender_reply_address'],
                             serializer.recipient.data['email'],
                             secret.content)
                 except:
                     return Response("Email content send failed", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             else:  # twilio
-                ts = TwilioSender.TwilioSender()
                 try:
-                    ts.send(serializer.data['sender_reply_address'],
+                    TwilioSender.send(serializer.data['sender_reply_address'],
                             serializer.recipient.data['email'],
                             secret.content)
                 except:
@@ -51,17 +49,15 @@ class SecretCreate(APIView):
 
             # key send logic
             if serializer.data['key_delivery_channel'] == models.EMAIL_CHANNEL:  # sendgrid
-                ss = SendgridSender.SendgridSender()
                 try:
-                    ss.send(serializer.data['sender_reply_address'],
+                    SendgridSender.send(serializer.data['sender_reply_address'],
                             serializer.recipient.data['email'],
                             key)
                 except:
                     return Response("Email key send failed", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             else:  # twilio
-                ts = TwilioSender.TwilioSender()
                 try:
-                    ts.send(serializer.data['sender_reply_address'],
+                    TwilioSender.send(serializer.data['sender_reply_address'],
                             serializer.recipient.data['phone'],
                             key)
                 except:
@@ -86,11 +82,10 @@ class SecretDecrypt(APIView):
         requested_secret = self.get_object(uid)
         serializer = serializers.DecryptRequestSerializer(data=request.data)
         if serializer.is_valid():
-            e = encryptor.AESEncryptor()
             to_decrypt = bytes(requested_secret.content, "utf-8")
             key = serializer.data['key']
             try:
-                decrypted_content = e.decrypt_secret(to_decrypt, key)
+                decrypted_content = encryptor.decrypt_secret(to_decrypt, key)
             except Exception as e:
                 print(e)
                 result = {"result": None, "error": "Error decrypting content"}
@@ -114,7 +109,7 @@ class SecretDelete(APIView):
         try:
             management_key = request.data['management_key']
             assert management_key == secret.management_key
-            secret.delete()
+            #secret.delete()
         except:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
