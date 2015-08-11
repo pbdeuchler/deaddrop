@@ -6,7 +6,6 @@ django
 django-model-utils
 django-rest-swagger
 djoser
-psycopg2
 bcrypt
 cffi
 dj-database-url
