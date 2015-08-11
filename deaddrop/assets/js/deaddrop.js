@@ -61,7 +61,6 @@ $(document).on('click', '#send-msg, #nav-new-msg', function(e) {
 
 $(document).on('click', '#nav-del-msg', function(e) {
   bootbox.dialog({
-<<<<<<< HEAD
   message:  del_form,
   title: "Delete Message",
   buttons: {
