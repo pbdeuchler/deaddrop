@@ -122,6 +122,7 @@ body {
 }
 .modal-content {
   color:#333;
+  text-shadow:none;
 }
 .modal-header {
   background:linear-gradient(to bottom,#d9534f 0,#c12e2a 100%);
@@ -132,6 +133,14 @@ body {
     color:#333;
     text-shadow:none;
 }
+.input-group {
+  margin-top:5px;
+  margin-bottom:5px;
+}
+#sms_field_div {
+  display:none;
+}
+
 @media (min-width: 768px) {
   .masthead-brand {
     float: left;
