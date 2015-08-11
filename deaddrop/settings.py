@@ -52,6 +52,7 @@ DJANGO_APPS = (
 
 CUSTOM_APPS = (
     'deaddrop.api',
+    'deaddrop.web',
 )
 
 LIBRARY_APPS = (
