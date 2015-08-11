@@ -36,7 +36,7 @@ class SecretCreate(APIView):
                 try:
                     SendgridSender.send(serializer.data['sender_reply_address'],
                             serializer.data['recipient']['email'],
-                            secret.content)
+                            "https://deaddrop.space/secret/%s" % secret.uid)
                 except:
                     traceback.print_exc(file=sys.stdout)
                     return Response("Email content send failed", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -44,7 +44,7 @@ class SecretCreate(APIView):
                 try:
                     TwilioSender.send(serializer.data['sender_reply_address'],
                             serializer.data['recipient']['email'],
-                            secret.content)
+                            "https://deaddrop.space/secret/%s" % secret.uid)
                 except:
                     traceback.print_exc(file=sys.stdout)
                     return Response("SMS content send failed", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
