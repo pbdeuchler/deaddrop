@@ -20,7 +20,6 @@ class SecretCreate(APIView):
         if serializer.is_valid():
             e = encryptor.AESEncryptor()
             encryped_content, key = e.encrypt_secret(serializer.data['secret']['content'])
-            key = str(base64.b64encode(key), "utf-8")
             if (serializer.data['secret']['expiry_type'] == models.TIME_EXPIRY) and serializer.data.get('expiry_timestamp', None) is None:
                 return Response("An expiry time must be provided", status=status.HTTP_400_BAD_REQUEST)
             secret = models.Secret(content=encryped_content,
@@ -89,7 +88,7 @@ class SecretDecrypt(APIView):
         if serializer.is_valid():
             e = encryptor.AESEncryptor()
             to_decrypt = bytes(requested_secret.content, "utf-8")
-            key = base64.b64decode(serializer.data['key'])
+            key = serializer.data['key']
             try:
                 decrypted_content = e.decrypt_secret(to_decrypt, key)
             except Exception as e:
