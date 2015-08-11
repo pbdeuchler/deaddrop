@@ -1,4 +1,4 @@
-from django import models
+from django.db import models
 
 DEFAULT_MAX_LENGTH = 128
 
@@ -22,6 +22,6 @@ EXPIRY_TYPES = (
 class Secret(models.Model):
     uid = models.CharField(max_length=DEFAULT_MAX_LENGTH)
     content = models.TextField()
-    expiry_type = models.ChoiceField(choices=EXPIRY_TYPES, max_length=1)
-    expiry_timestamp = models.DateTimeField()
-    key = models.CharField(max_length=32)
+    expiry_type = models.CharField(choices=EXPIRY_TYPES, max_length=1)
+    expiry_timestamp = models.DateTimeField(blank=True)
+    management_key = models.CharField(max_length=DEFAULT_MAX_LENGTH)
