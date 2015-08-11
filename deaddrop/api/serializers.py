@@ -27,4 +27,4 @@ class CreateRequestSerializer(serializers.Serializer):
 
 
 class DecryptRequestSerializer(serializers.Serializer):
-    key = serializers.CharField(max_length=32)
+    key = serializers.CharField(max_length=52)

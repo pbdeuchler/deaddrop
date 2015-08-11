@@ -26,7 +26,7 @@ class AESEncryptor:
 
     def decrypt_secret(self, garble, key):
         cipher = AES.new(key)
-        secret = cipher.decrypt(base64.b64decode(garble)).rstrip(PADDING)
+        secret = cipher.decrypt(base64.b64decode(garble)).decode("utf-8").rstrip(PADDING)
         return secret
 
     def __pad(self, thingy):
