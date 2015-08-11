@@ -28,19 +28,17 @@ var message_form = '<div class="input-group">' +
 
 $(document).on('click', '#send-msg', function(e) {
   bootbox.dialog({
-  message:  message_form,
-  title: "Send Encrypted Message",
-  buttons: {
-    send: {
-      label: "Send!",
-      className: "btn-danger",
-      callback: function() {
-        
-      }
-    },
-    
-  }
-});
+    message:  message_form,
+    title: "Send Encrypted Message",
+    buttons: {
+      send: {
+        label: "Send!",
+        className: "btn-danger",
+        callback: function() {
+        }
+      }, 
+    }
+  });
 });
 
 function send_secret_message() {
