@@ -134,8 +134,8 @@ class SecretDelete(APIView):
         try:
             management_key = request.data['management_key']
             assert management_key == secret.management_key
-            #secret.delete()
-        except AssertionError:
+            secret.delete()
+        except:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         return Response(status=status.HTTP_200_OK)
