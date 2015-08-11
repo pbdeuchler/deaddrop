@@ -36,15 +36,17 @@ class SecretCreate(APIView):
                 try:
                     SendgridSender.send(serializer.data['sender_reply_address'],
                             serializer.data['recipient']['email'],
-                            "https://deaddrop.space/secret/%s" % secret.uid)
+                            "https://deaddrop.space/secret/%s" % secret.uid,
+                            1)
                 except:
                     traceback.print_exc(file=sys.stdout)
                     return Response("Email content send failed", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             else:  # twilio
                 try:
                     TwilioSender.send(serializer.data['sender_reply_address'],
-                            serializer.data['recipient']['email'],
-                            "https://deaddrop.space/secret/%s" % secret.uid)
+                            serializer.data['recipient']['phone'],
+                            "https://deaddrop.space/secret/%s" % secret.uid,
+                            1)
                 except:
                     traceback.print_exc(file=sys.stdout)
                     return Response("SMS content send failed", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -54,7 +56,8 @@ class SecretCreate(APIView):
                 try:
                     SendgridSender.send(serializer.data['sender_reply_address'],
                             serializer.data['recipient']['email'],
-                            key)
+                            key,
+                            2)
                 except:
                     traceback.print_exc(file=sys.stdout)
                     return Response("Email key send failed", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -62,7 +65,8 @@ class SecretCreate(APIView):
                 try:
                     TwilioSender.send(serializer.data['sender_reply_address'],
                             serializer.data['recipient']['phone'],
-                            key)
+                            key,
+                            2)
                 except:
                     traceback.print_exc(file=sys.stdout)
                     return Response("SMS key send failed", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
