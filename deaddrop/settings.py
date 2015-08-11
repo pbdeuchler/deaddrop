@@ -56,11 +56,11 @@ CUSTOM_APPS = (
 
 LIBRARY_APPS = (
     'rest_framework',
-    'djoser',
-    'authtools',
+    # 'djoser',
+    # 'authtools',
     'rest_framework_swagger',
     # See: http://django-rest-framework.org/api-guide/authentication#tokenauthentication
-    'rest_framework.authtoken',
+    # 'rest_framework.authtoken',
     # 'bootstrap3',
 )
 
@@ -127,7 +127,7 @@ TEMPLATE_DIRS = (
     root('templates'),
 )
 
-AUTH_USER_MODEL = 'authtools.User'
+# AUTH_USER_MODEL = 'authtools.User'
 
 PASSWORD_HASHERS = (
     'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
