@@ -65,15 +65,15 @@ function send_secret_message() {
     post_content.recipient.phone = recipient_mobile;
   }
 
-  var url = '/v1/create/';
+  var url = '/api/v1/create/';
 
   // set spinner
   $('.modal-body').html('<img src="/static/img/giphy.gif" />');
   // post
   $.ajax({
     type: "POST",
-    url: url, 
-    data: JSON.stringify(post_content), 
+    url: url,
+    data: JSON.stringify(post_content),
     dataType: 'json',
     contentType: 'application/json; charset=utf-8',
     success: post_success});
