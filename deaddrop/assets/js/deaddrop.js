@@ -19,6 +19,10 @@ var message_form = '<div class="input-group">' +
   '<textarea class="form-control" id="secret_content" aria-describedby="secret_content_field"></textarea>' +
 '</div>' +
 '<div class="input-group">' +
+  '<span class="input-group-addon" id="expiry_time_field">Selfdestruct In</span>' +
+  '<input type="number" min="1" max="365" class="form-control" id="expiry_time" aria-describedby="expiry_time_field" style="width:80px;"> <span style="float:left; padding:8px;" >days</span>' +
+'</div>' +
+'<div class="input-group">' +
   '<span class="input-group-addon" id="key_delivery_field">Key Delivery By</span>' +
   '<select name="key_delivery_channel" class="form-control" id="key_delivery_channel" aria-describedby="key_delivery_field"><option selected="true" value="1">Email</option><option value="2">SMS</option></select>' +
 '</div>' +
@@ -108,6 +112,13 @@ function process_delete(){
     });
 }
 
+// http://stackoverflow.com/a/19691491
+function addDays(date, days) {
+    var result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
+}
+
 function send_secret_message() {
   var sender_reply_address = $('#sender_reply_address').val();
   var sender_id = $('#sender_id').val();
@@ -116,11 +127,14 @@ function send_secret_message() {
   var message_content = $('#secret_content').val();
   var key_delivery_channel = parseInt($('#key_delivery_channel').val());
   var recipient_mobile = $('#recipient_mobile').val();
+  var days_until_expiry = $('#expiry_time').val();
+
+  var expiryDate = addDays(new Date(), parseInt(days_until_expiry));
 
   var post_content = {
             "sender_reply_address": sender_reply_address, 
             "secret": {"expiry_type": 1, 
-                      "expiry_timestamp": '2015-08-08 00:00:00',
+                      "expiry_timestamp": expiryDate,
                       "content": message_content },
             "recipient": {"id": recipient_id, 
                         "email": recipient_email}, 
