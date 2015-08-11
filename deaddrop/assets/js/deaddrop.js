@@ -26,7 +26,18 @@ var message_form = '<div class="input-group">' +
   '<input type="text" class="form-control" id="recipient_mobile" placeholder="Recipient Mobile" aria-describedby="sms_field">' +
 '</div><br clear="all">';
 
-$(document).on('click', '#send-msg', function(e) {
+var del_form = '<div class="input-group">' +
+  '<span class="input-group-addon" id="msg_guid_field">Required</span>' +
+  '<input type="text" class="form-control" name="msg_guid" id="msg_guid" placeholder="Message GUID" aria-describedby="sender_id_field">' +
+'</div>' + 
+'<div class="input-group">' +
+  '<span class="input-group-addon" id="manage_key_field">Required</span>' +
+  '<input type="text" class="form-control" name="manage_key" id="manage_key" placeholder="Management Key" aria-describedby="sender_id_field">' +
+'</div>' 
+;
+
+
+$(document).on('click', '#send-msg, #nav-new-msg', function(e) {
   bootbox.dialog({
   message:  message_form,
   title: "Send Encrypted Message",
@@ -36,10 +47,38 @@ $(document).on('click', '#send-msg', function(e) {
       className: "btn-danger",
       callback: send_secret_message
     },
+    done: {
+      label: "Done!",
+      className: "btn-success",
+      callback: function(){
+         $('body').removeClass('modal-open');
+        $('.modal .modal-backdrop').remove();
+      }
+    },
     
   }
+  });
 });
+
+$(document).on('click', '#nav-del-msg', function(e) {
+  bootbox.dialog({
+  message:  del_form,
+  title: "Delete Message",
+  buttons: {
+    send: {
+      label: "Delete!",
+      className: "btn-danger",
+      callback: send_secret_message,
+      id: "send_msg_button"
+    },
+    
+  }
+  });
 });
+
+function process_delete(){
+
+}
 
 function send_secret_message() {
   var sender_reply_address = $('#sender_reply_address').val();
@@ -80,9 +119,11 @@ function send_secret_message() {
   return false;
 }
 
-function post_success(){
-  $('div.bootbox').remove();
-  $('body').removeClass('modal-open');
+function post_success(data){
+  $('h4.modal-title').html('Message Sent!');
+  $('.btn-success').show();
+  $('.btn-danger').hide();
+  $('.modal-body').html('<p class="message_success">Your message has been sent.</p><p class="message_success">Please keep the following info to manage this later:</p><ul class="message_success"><li>GUID: ' + data.uid + '</li><li>Management Key: ' + data.management_key + '</li></ul>');
 }
 
 $(document).on('change', '#key_delivery_channel', function(e){
