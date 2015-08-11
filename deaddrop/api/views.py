@@ -129,9 +129,9 @@ class SecretDecrypt(APIView):
 class SecretDelete(APIView):
 
     def post(self, request, contentId=None, format=None):
-        secret = models.Secret.objects.get(uid=contentId)
 
         try:
+            secret = models.Secret.objects.get(uid=contentId)
             management_key = request.data['management_key']
             assert management_key == secret.management_key
             secret.delete()
