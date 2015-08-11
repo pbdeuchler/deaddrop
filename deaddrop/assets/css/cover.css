@@ -140,6 +140,12 @@ body {
 #sms_field_div {
   display:none;
 }
+.btn-success {
+  display:none;
+}
+.message_success {
+  text-align: left;
+}
 
 @media (min-width: 768px) {
   .masthead-brand {

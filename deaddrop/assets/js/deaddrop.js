@@ -1,6 +1,6 @@
 var message_form = '<div class="input-group">' +
   '<span class="input-group-addon" id="sender_id_field">Optional</span>' +
-  '<input type="text" class="form-control" id="sender_id" placeholder="Sender Name" aria-describedby="sender_id_field">' +
+  '<input type="text" class="form-control" name="sender_id" id="sender_id" placeholder="Sender Name" aria-describedby="sender_id_field">' +
 '</div>' +
 '<div class="input-group">' +
   '<span class="input-group-addon" id="sender_email_field">Optional</span>' +
@@ -26,7 +26,18 @@ var message_form = '<div class="input-group">' +
   '<input type="text" class="form-control" id="recipient_mobile" placeholder="Recipient Mobile" aria-describedby="sms_field">' +
 '</div><br clear="all">';
 
-$(document).on('click', '#send-msg', function(e) {
+var del_form = '<div class="input-group">' +
+  '<span class="input-group-addon" id="msg_guid_field">Required</span>' +
+  '<input type="text" class="form-control" name="msg_guid" id="msg_guid" placeholder="Message GUID" aria-describedby="sender_id_field">' +
+'</div>' + 
+'<div class="input-group">' +
+  '<span class="input-group-addon" id="manage_key_field">Required</span>' +
+  '<input type="text" class="form-control" name="manage_key" id="manage_key" placeholder="Management Key" aria-describedby="sender_id_field">' +
+'</div>' 
+;
+
+
+$(document).on('click', '#send-msg, #nav-new-msg', function(e) {
   bootbox.dialog({
   message:  message_form,
   title: "Send Encrypted Message",
@@ -34,25 +45,85 @@ $(document).on('click', '#send-msg', function(e) {
     send: {
       label: "Send!",
       className: "btn-danger",
-      callback: function() {
-        
+      callback: send_secret_message
+    },
+    done: {
+      label: "Done!",
+      className: "btn-success",
+      callback: function(){
+         $('body').removeClass('modal-open');
+        $('.modal .modal-backdrop').remove();
       }
     },
     
   }
+  });
 });
+
+$(document).on('click', '#nav-del-msg', function(e) {
+  bootbox.dialog({
+  message:  del_form,
+  title: "Delete Message",
+  buttons: {
+    send: {
+      label: "Delete!",
+      className: "btn-danger",
+      callback: send_secret_message,
+      id: "send_msg_button"
+    },
+    
+  }
+  });
 });
+
+function process_delete(){
+
+}
 
 function send_secret_message() {
   var sender_reply_address = $('#sender_reply_address').val();
   var sender_id = $('#sender_id').val();
   var recipient_id = $('#recipient_id').val();
   var recipient_email = $('#recipient_email').val();
-  var message_content = $('#message_content').val();
-  var key_delivery_channel = $('#key_delivery_channel').val();
+  var message_content = $('#secret_content').val();
+  var key_delivery_channel = parseInt($('#key_delivery_channel').val());
   var recipient_mobile = $('#recipient_mobile').val();
 
-  
+  var post_content = {
+            "sender_reply_address": sender_reply_address, 
+            "secret": {"expiry_type": 1, 
+                      "expiry_timestamp": '2015-08-08 00:00:00',
+                      "content": message_content },
+            "recipient": {"id": recipient_id, 
+                        "email": recipient_email}, 
+            "content_delivery_channel": 1, 
+            "sender_id": sender_id,
+            "key_delivery_channel": key_delivery_channel
+            };
+  if (recipient_mobile) {
+    post_content.recipient.phone = recipient_mobile;
+  }
+
+  var url = '/api/v1/create/';
+
+  // set spinner
+  $('.modal-body').html('<img src="/static/img/giphy.gif" />');
+  // post
+  $.ajax({
+    type: "POST",
+    url: url,
+    data: JSON.stringify(post_content),
+    dataType: 'json',
+    contentType: 'application/json; charset=utf-8',
+    success: post_success});
+  return false;
+}
+
+function post_success(data){
+  $('h4.modal-title').html('Message Sent!');
+  $('.btn-success').show();
+  $('.btn-danger').hide();
+  $('.modal-body').html('<p class="message_success">Your message has been sent.</p><p class="message_success">Please keep the following info to manage this later:</p><ul class="message_success"><li>GUID: ' + data.uid + '</li><li>Management Key: ' + data.management_key + '</li></ul>');
 }
 
 $(document).on('change', '#key_delivery_channel', function(e){
