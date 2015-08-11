@@ -1,1 +1,1 @@
-web: gunicorn deaddrop.wsgi:application
+web: gunicorn deaddrop.wsgi
