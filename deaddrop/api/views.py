@@ -6,7 +6,7 @@ from django.http import Http404
 import deaddrop.api.models as models
 import deaddrop.api.serializers as serializers
 from deaddrop.senders import SendgridSender, TwilioSender
-from deaddrop.encryption import encryptor
+from deaddrop.encryption import aesencryptor as encryptor
 
 import datetime, uuid, base64
 
@@ -105,3 +105,18 @@ class SecretDecrypt(APIView):
             return Response(result, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class SecretDelete(APIView):
+
+    def post(self, request, contentId=None, format=None):
+        secret = models.Secret.objects.get(uid=contentId)
+
+        try:
+            management_key = request.data['management_key']
+            assert management_key == secret.management_key
+            secret.delete()
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(status=status.HTTP_200_OK)
