@@ -61,21 +61,30 @@ $(document).on('click', '#send-msg, #nav-new-msg', function(e) {
 
 $(document).on('click', '#nav-del-msg', function(e) {
   bootbox.dialog({
-    message:  del_form,
-    title: "Delete Message",
-    buttons: {
-      send: {
-        label: "Delete!",
-        className: "btn-danger",
-        callback: send_secret_message,
-        id: "send_msg_button"
-      }, 
+<<<<<<< HEAD
+  message:  del_form,
+  title: "Delete Message",
+  buttons: {
+    send: {
+      label: "Delete!",
+      className: "btn-danger",
+      callback: process_delete,
+      id: "send_msg_button"
     },
+  }
   });
 });
 
 function process_delete(){
-
+  var postdata = {"management_key": $('#manage_key')}
+  $.post('http://localhost:8000/api/v1/delete/' + $('#message_uid').val(),
+    encodeURIComponent(postdata)) 
+    .done(function() {
+      window.open('https://www.youtube.com/watch?v=fkXGGhuQs0o&t=50');
+    })
+    .fail(function() {
+      alert('fail');
+    });
 }
 
 function send_secret_message() {
