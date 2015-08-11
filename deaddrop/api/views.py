@@ -137,6 +137,8 @@ class SecretDelete(APIView):
             assert management_key == secret.management_key
             secret.delete()
         except:
+            print(request.data.items)
+            traceback.print_exc(file=sys.stdout)
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         return Response(status=status.HTTP_200_OK)
