@@ -19,9 +19,22 @@ class SecretCreate(APIView):
         serializer = serializers.CreateRequestSerializer(data=request.data)
         if serializer.is_valid():
             encrypted_content, key = encryptor.encrypt_secret(serializer.data['secret']['content'])
-            key = str(base64.b64encode(key), "utf-8")
+
             if (serializer.data['secret']['expiry_type'] == models.TIME_EXPIRY) and serializer.data.get('expiry_timestamp', None) is None:
                 return Response("An expiry time must be provided", status=status.HTTP_400_BAD_REQUEST)
+
+            if (serializer.data['key_delivery_channel'] == models.SMS_CHANNEL) or (serializer.data['content_delivery_channel'] == models.SMS_CHANNEL):
+                if serializer.data['recipient']['phone'] is None:
+                    return Response("An phone number must be provided", status=status.HTTP_400_BAD_REQUEST)
+
+            if (serializer.data['key_delivery_channel'] == models.EMAIL_CHANNEL) or (serializer.data['content_delivery_channel'] == models.EMAIL_CHANNEL):
+                if serializer.data['recipient']['email'] is None:
+                    return Response("An email address must be provided", status=status.HTTP_400_BAD_REQUEST)
+
+            if (serializer.data['key_delivery_channel'] == models.SMS_CHANNEL):
+                if serializer.data['recipient']['phone'] is None:
+                    return Response("An phone number must be provided", status=status.HTTP_400_BAD_REQUEST)
+
             secret = models.Secret(content=encrypted_content,
                                     uid=generage_uid(),
                                     expiry_type=serializer.data['secret']['expiry_type'],

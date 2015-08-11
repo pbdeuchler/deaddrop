@@ -19,13 +19,13 @@ def encrypt_secret(secret):
     key = __gen_key()
     cipher = AES.new(key)
     garble = base64.b64encode(cipher.encrypt(__pad(secret)))
-    key = base64.b64encode(key)
+    key = str(base64.b64encode(key), "utf-8")
     return (garble, key)
 
 
 def decrypt_secret(garble, key):
-    cipher = AES.new(key)
-    secret = cipher.decrypt(base64.b64decode(garble)).rstrip(PADDING)
+    cipher = AES.new(base64.b64decode(key))
+    secret = cipher.decrypt(base64.b64decode(garble)).decode("utf-8").rstrip(PADDING)
     return secret
 
 

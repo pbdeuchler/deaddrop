@@ -13,8 +13,8 @@ class SecretSerializer(serializers.ModelSerializer):
 
 class RecipientSerializer(serializers.Serializer):
     id = serializers.CharField(required=False)
-    email = serializers.EmailField()
-    phone = serializers.CharField(max_length=12)
+    email = serializers.EmailField(required=False)
+    phone = serializers.CharField(max_length=12, required=False)
 
 
 class CreateRequestSerializer(serializers.Serializer):
