@@ -18,7 +18,6 @@ class SecretCreate(APIView):
     def post(self, request, format=None):
         serializer = serializers.CreateRequestSerializer(data=request.data)
         if serializer.is_valid():
-            print(serializer.data)
             e = encryptor.AESEncryptor()
             encryped_content, key = e.encrypt_secret(serializer.data['secret']['content'])
             if (serializer.data['secret']['expiry_type'] == models.TIME_EXPIRY) and serializer.data.get('expiry_timestamp', None) is None:
@@ -28,6 +27,7 @@ class SecretCreate(APIView):
                                     expiry_type=serializer.data['secret']['expiry_type'],
                                     expiry_timestamp=serializer.data['secret'].get('expiry_timestamp', None),
                                     management_key=generage_uid())
+            print(secret)
             secret.save()
 
             # content send logic
