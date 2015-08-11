@@ -97,3 +97,17 @@ class SecretDecrypt(APIView):
                 return Response(result, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class SecretDelete(APIView):
+
+    def post(self, request, contentId=None, format=None):
+        secret = models.Secret.objects.get(uid=contentId)
+
+        try:
+            management_key = request.data['management_key']
+            assert management_key == secret.management_key
+            secret.delete()
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+        return Response(status=status.HTTP_200_OK)

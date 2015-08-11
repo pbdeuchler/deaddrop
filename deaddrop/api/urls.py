@@ -1,6 +1,6 @@
 from django.conf.urls import url, include
 from rest_framework import routers, views, reverse, response
-from .views import SecretCreate, SecretDecrypt
+from .views import SecretCreate, SecretDecrypt, SecretDelete
 
 
 class HybridRouter(routers.DefaultRouter):
@@ -60,3 +60,8 @@ router.add_api_view("decrypt-view",
                     url(r'decrypt/(?P<uid>\w+)/$',
                     SecretDecrypt.as_view(),
                     name='decrypt-view'))
+
+router.add_api_view("delete-view",
+                    url(r'delete/(?P<contentId>.+)$',
+                    SecretDelete.as_view(),
+                    name='delete-view'))
