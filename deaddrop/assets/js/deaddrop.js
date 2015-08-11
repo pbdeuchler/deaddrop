@@ -55,24 +55,22 @@ $(document).on('click', '#send-msg, #nav-new-msg', function(e) {
         $('.modal .modal-backdrop').remove();
       }
     },
-    
   }
   });
 });
 
 $(document).on('click', '#nav-del-msg', function(e) {
   bootbox.dialog({
-  message:  del_form,
-  title: "Delete Message",
-  buttons: {
-    send: {
-      label: "Delete!",
-      className: "btn-danger",
-      callback: send_secret_message,
-      id: "send_msg_button"
+    message:  del_form,
+    title: "Delete Message",
+    buttons: {
+      send: {
+        label: "Delete!",
+        className: "btn-danger",
+        callback: send_secret_message,
+        id: "send_msg_button"
+      }, 
     },
-    
-  }
   });
 });
 
