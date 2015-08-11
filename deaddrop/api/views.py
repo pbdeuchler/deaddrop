@@ -1,8 +1,8 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+import sys, traceback
 from django.http import Http404
-
 import deaddrop.api.models as models
 import deaddrop.api.serializers as serializers
 from deaddrop.senders import SendgridSender, TwilioSender
@@ -35,32 +35,36 @@ class SecretCreate(APIView):
             if serializer.data['content_delivery_channel'] == models.EMAIL_CHANNEL:  # sendgrid
                 try:
                     SendgridSender.send(serializer.data['sender_reply_address'],
-                            serializer.recipient.data['email'],
+                            serializer.data['recipient']['email'],
                             secret.content)
                 except:
+                    traceback.print_exc(file=sys.stdout)
                     return Response("Email content send failed", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             else:  # twilio
                 try:
                     TwilioSender.send(serializer.data['sender_reply_address'],
-                            serializer.recipient.data['email'],
+                            serializer.data['recipient']['email'],
                             secret.content)
                 except:
+                    traceback.print_exc(file=sys.stdout)
                     return Response("SMS content send failed", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
             # key send logic
             if serializer.data['key_delivery_channel'] == models.EMAIL_CHANNEL:  # sendgrid
                 try:
                     SendgridSender.send(serializer.data['sender_reply_address'],
-                            serializer.recipient.data['email'],
+                            serializer.data['recipient']['email'],
                             key)
                 except:
+                    traceback.print_exc(file=sys.stdout)
                     return Response("Email key send failed", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             else:  # twilio
                 try:
                     TwilioSender.send(serializer.data['sender_reply_address'],
-                            serializer.recipient.data['phone'],
+                            serializer.data['recipient']['phone'],
                             key)
                 except:
+                    traceback.print_exc(file=sys.stdout)
                     return Response("SMS key send failed", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
             secret.save()
