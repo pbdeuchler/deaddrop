@@ -87,7 +87,7 @@ class SecretDecrypt(APIView):
         serializer = serializers.DecryptRequestSerializer(data=request.data)
         if serializer.is_valid():
             to_decrypt = bytes(requested_secret.content, "utf-8")
-            key = base64.b64decode(serializer.data['key'])
+            key = serializer.data['key']
             try:
                 decrypted_content = encryptor.decrypt_secret(to_decrypt, key)
             except Exception as e:
