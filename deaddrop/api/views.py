@@ -20,7 +20,7 @@ class SecretCreate(APIView):
         if serializer.is_valid():
             encrypted_content, key = encryptor.encrypt_secret(serializer.data['secret']['content'])
 
-            if (serializer.data['secret']['expiry_type'] == models.TIME_EXPIRY) and serializer.data.get('expiry_timestamp', None) is None:
+            if (serializer.data['secret']['expiry_type'] == models.TIME_EXPIRY) and serializer.data['secret'].get('expiry_timestamp', None) is None:
                 return Response("An expiry time must be provided", status=status.HTTP_400_BAD_REQUEST)
 
             if (serializer.data['key_delivery_channel'] == models.SMS_CHANNEL) or (serializer.data['content_delivery_channel'] == models.SMS_CHANNEL):
@@ -129,9 +129,9 @@ class SecretDecrypt(APIView):
 class SecretDelete(APIView):
 
     def post(self, request, contentId=None, format=None):
-        secret = models.Secret.objects.get(uid=contentId)
 
         try:
+            secret = models.Secret.objects.get(uid=contentId)
             management_key = request.data['management_key']
             assert management_key == secret.management_key
             secret.delete()
