@@ -83,7 +83,6 @@ function process_delete(){
       window.open('https://www.youtube.com/watch?v=fkXGGhuQs0o&t=50');
     })
     .fail(function() {
-      alert('fail');
     });
 }
 
