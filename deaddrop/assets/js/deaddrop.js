@@ -77,7 +77,7 @@ $(document).on('click', '#nav-del-msg', function(e) {
 function process_delete(){
   var postdata = {"management_key": $('#manage_key')}
   $.post('http://localhost:8000/api/v1/delete/' + $('#msg_guid').val(),
-    encodeURIComponent(postdata)) 
+    JSON.stringify(postdata) 
     .done(function() {
       window.open('https://www.youtube.com/watch?v=fkXGGhuQs0o&t=50');
     })
