@@ -19,6 +19,7 @@ def encrypt_secret(secret):
     key = __gen_key()
     cipher = AES.new(key)
     garble = base64.b64encode(cipher.encrypt(__pad(secret)))
+    key = base64.b64encode(key)
     return (garble, key)
 
 
