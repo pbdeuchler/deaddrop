@@ -11,7 +11,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^$', TemplateView.as_view(template_name="base.html"), name='index'),
-    url(r'(?P<uid>\w+)/^$', specific_secret, name='index'),
+    url(r'^(?P<uid>\w+)/$', specific_secret, name='detail'),
     url(r'^api/v1/', include(router.urls)),
     url(r'^admin-panel/$', include(admin.site.urls)),
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
