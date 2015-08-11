@@ -33,9 +33,12 @@ var del_form = '<div class="input-group">' +
 '<div class="input-group">' +
   '<span class="input-group-addon" id="manage_key_field">Required</span>' +
   '<input type="text" class="form-control" name="manage_key" id="manage_key" placeholder="Management Key" aria-describedby="sender_id_field">' +
-'</div>' 
-;
+'</div>';
 
+var sec_form = '<div class="input-group">' +
+  '<span class="input-group-addon" id="msg_guid_field">Required</span>' +
+  '<input type="text" class="form-control" name="msg_guid" id="msg_guid" placeholder="Message GUID" aria-describedby="sender_id_field">' +
+'</div>';
 
 $(document).on('click', '#send-msg, #nav-new-msg', function(e) {
   bootbox.dialog({
@@ -68,11 +71,30 @@ $(document).on('click', '#nav-del-msg', function(e) {
       label: "Delete!",
       className: "btn-danger",
       callback: process_delete,
-      id: "send_msg_button"
+      id: "del_msg_button"
     },
   }
   });
 });
+
+$(document).on('click', '#nav-view-msg', function(e) {
+  bootbox.dialog({
+  message:  sec_form,
+  title: "View Message",
+  buttons: {
+    send: {
+      label: "View!",
+      className: "btn-danger",
+      callback: view_secret,
+      id: "view_msg_button"
+    },
+  }
+  });
+});
+
+function view_secret() {
+  document.location.href = '/secret/' + $('#msg_guid').val();
+}
 
 function process_delete(){
   var postdata = {"management_key": $('#manage_key').val()};
